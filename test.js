@@ -237,9 +237,31 @@ async function group(keyword, page = 1, popular = false) {
   return getList(url);
 }
 
+// not tested yet but should work
+async function artist(keyword, page = 1, popular = false) {
+  const qs = require("qs");
+  let sort = getSort(popular);
+  let query = qs.stringify({
+    page,
+  });
+  let url = `${baseUrl}/artist/${modifyKeyword(keyword)}/${sort}?${query}`;
 
+  return getList(url);
+}
 
+// not tested yet but should work
+async function character(keyword, page = 1, popular = false) {
+  const qs = require("qs");
+  let sort = getSort(popular);
+  let query = qs.stringify({
+    page,
+  });
+  let url = `${baseUrl}/character/${modifyKeyword(keyword)}/${sort}?${query}`;
 
+  return getList(url);
+}
+
+//work
 function modifyKeyword(keyword) {
   return keyword.replace(/ /g, "-").toLowerCase();
 }
