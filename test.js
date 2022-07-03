@@ -18,8 +18,8 @@ async function scrape(baseUrl){
   await page.goto(baseUrl, {waitUntil: "networkidle2"});
   await page.waitForTimeout(5000)
   const data = await page.evaluate(() => document.querySelector('*').outerHTML);
-  
-  return data 
+  await browser.close();
+  return data
 }
 
 // sometimes econreset but works
@@ -34,6 +34,8 @@ async function getBook(bookID){
     return JSON.parse(document.querySelector("body").innerText); 
   });
 
+  await browser.close();
+
   return innerText
   
 }
@@ -47,7 +49,7 @@ async function getRelated(bookID){
   await page.waitForTimeout(5000)
   
   const data = await page.evaluate(() => document.querySelector('*').outerHTML);
-  
+  await browser.close();
   return data 
 }
 
@@ -200,6 +202,7 @@ async function random(){
     await page.waitForTimeout(5000)
     const url = await page.url(); 
     let result = await g(url)
+    await browser.close();
     return result
     
 }
