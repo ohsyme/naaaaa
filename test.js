@@ -2,12 +2,13 @@ const puppeteer = require('puppeteer-extra')
 const cheerio = require('cheerio')
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 const Qs = require("qs");
+const axios = require('axios')
 puppeteer.use(StealthPlugin())
 
 
 const baseUrl = "https://nhentai.net";
 
-group('shotacon', 2, false).then(console.log)
+random().then(console.log)
 
 // sometimes econreset but works
 async function scrape(baseUrl){
@@ -26,12 +27,14 @@ async function getBook(bookID){
   const browser = await puppeteer.launch({headless: false});
   const page = await browser.newPage();
   await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.67 Safari/537.36 OPR/87.0.4390.58')
-  await page.goto(`${baseUrl}/api/gallery/${bookID}`, {waitUntil: "networkidle0"});
+  await page.goto(`${baseUrl}/api/gallery/${bookID}`, {waitUntil: "networkidle2"})
   await page.waitForTimeout(5000)
   
-  const data = await page.evaluate(() => document.querySelector('*').outerHTML);
+  const innerText = await page.evaluate(() =>  {
+    return JSON.parse(document.querySelector("body").innerText); 
+  });
 
-  return data 
+  return innerText
   
 }
 
@@ -196,7 +199,9 @@ async function random(){
     await page.goto(`${baseUrl}/random`, {waitUntil: "networkidle2"});
     await page.waitForTimeout(5000)
     const url = await page.url(); 
-    await g(url)
+    let result = await g(url)
+    return result
+    
 }
 
 // work
